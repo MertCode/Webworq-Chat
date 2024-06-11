@@ -1,7 +1,7 @@
 import { Link, usePage } from "@inertiajs/react";
-import { UserAvatar } from "./UserAvatar";
-import { GroupAvatar } from "./GroupAvatar";
-import { userOptionsDropdown } from "./UserOptionsDropdown";
+import UserAvatar from "./UserAvatar";
+import GroupAvatar from "./GroupAvatar";
+import UserOptionsDropdown from "./UserOptionsDropdown";
 
 const conversationItem = ({
     conversation,
@@ -40,7 +40,7 @@ const conversationItem = ({
                 classes +
                 (conversation.is_user && currentUser.is_admin
                     ? " pr-2"
-                    : "pr-4")
+                    : " pr-4")
             }
         >
             {conversation.is_user && (
@@ -72,7 +72,7 @@ const conversationItem = ({
                 )}
             </div>
             {currentUser.is_admin && conversation.is_user && (
-                <userOptionsDropdown conversation={conversation} />
+                <UserOptionsDropdown conversation={conversation} />
             )}
         </Link>
     );
