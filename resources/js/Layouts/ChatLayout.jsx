@@ -107,7 +107,7 @@ const ChatLayout = ({ children }) => {
                         My Conversations
                         <div
                             className="tooltip tooltip-left"
-                            data-tip="Crate new Group"
+                            data-tip="Create new Group"
                         >
                             <button className="text-gray-400 hover:text-gray-200">
                                 <PencilSquareIcon className="w-4 h-4 inline-block ml-2" />
@@ -139,10 +139,9 @@ const ChatLayout = ({ children }) => {
                             ))}
                     </div>
                 </div>
-            </div>
-
-            <div className="flex-1 flex flex-col overflow-hidden">
-                {children}
+                <div className="flex-1 flex flex-col overflow-hidden">
+                    {children}
+                </div>
             </div>
         </>
     );

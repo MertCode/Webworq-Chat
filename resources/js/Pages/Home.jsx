@@ -1,8 +1,8 @@
-import ChatLayout from "@/Layouts/ChatLayout";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import ChatLayout from "@/Layouts/ChatLayout";
 
 function Home({ auth }) {
-    return <>messages</>;
+    return <>Messages</>;
 }
 
 Home.layout = (page) => {
