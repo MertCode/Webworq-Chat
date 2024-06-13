@@ -16,6 +16,7 @@ use App\Models\Conversation;
 use App\Jobs\SocketMessage;
 
 
+
 class MessageController extends Controller
 {
     // this loads messages by users
@@ -43,7 +44,7 @@ class MessageController extends Controller
 
         return inertia('Home', [
             'selectedConversation' => $group->toConversationArray(),
-            'messagges' => MessageResource::collection($messages),
+            'messages' => MessageResource::collection($messages),
         ]);
     }
 
