@@ -103,8 +103,9 @@ class MessageController extends Controller
             Conversation::updateConversationWithMessage($receiverId, auth()->id(), $message);
         }
         if ($groupId) {
-            Conversation::updateGroupWithMessage($groupId, $message);
+            Group::updateGroupWithMessage($groupId, $message);
         }
+
         SocketMessage::dispatch($message);
         return new MessageResource($message);
     }
