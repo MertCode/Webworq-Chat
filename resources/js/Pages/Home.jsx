@@ -1,9 +1,10 @@
-import ConversationHeader from "@/Components/App/ConversationHeader";
-import MessageItem from "@/Components/App/MessageItem";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import ChatLayout from "@/Layouts/ChatLayout";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/solid";
 import { useEffect, useRef, useState } from "react";
+import ConversationHeader from "@/Components/App/ConversationHeader";
+import MessageItem from "@/Components/App/MessageItem";
+import MessageInput from "@/Components/App/MessageInput";
 
 function Home({ selectedConversation = null, messages = null }) {
     const [localMessages, setLocalMessages] = useState([]);
@@ -62,7 +63,7 @@ function Home({ selectedConversation = null, messages = null }) {
                         )}
                     </div>
                     {/* will stay frozen */}
-                    {/* <MessageInput conversation={selectedConversation} /> */}
+                    <MessageInput conversation={selectedConversation} />
                 </>
             )}
         </>
