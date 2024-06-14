@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Message;
@@ -13,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\MessageAttachment;
 use App\Models\Conversation;
-use App\Jobs\SocketMessage;
+use App\Events\SocketMessage;
 
 
 
