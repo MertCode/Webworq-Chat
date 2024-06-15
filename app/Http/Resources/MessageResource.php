@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources;
 
-use App\Models\MessageAttachment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\MessageAttachmentResource;
+
 
 class MessageResource extends JsonResource
 {
