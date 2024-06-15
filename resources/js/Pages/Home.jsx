@@ -35,9 +35,9 @@ function Home({ selectedConversation = null, messages = null }) {
     };
 
     const loadMoreMessages = useCallback(() => {
-        // if (noMoreMessages) {
-        //     return;
-        // }
+        if (noMoreMessages) {
+            return;
+        }
         const firstMessage = localMessages[0];
         console.log("firstMessage", firstMessage);
         console.log("firstMessage.id", firstMessage.id);
