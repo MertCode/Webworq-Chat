@@ -39,8 +39,6 @@ function Home({ selectedConversation = null, messages = null }) {
             return;
         }
         const firstMessage = localMessages[0];
-        console.log("firstMessage", firstMessage);
-        console.log("firstMessage.id", firstMessage.id);
         axios
             .get(route("message.loadOlder", firstMessage.id))
             .then(({ data }) => {
@@ -54,7 +52,6 @@ function Home({ selectedConversation = null, messages = null }) {
                 const clientHeight = messagesCtrRef.current.clientHeight;
                 const tmpScrollFromBottom =
                     scrollHeight - scrollTop - clientHeight;
-                console.log("tmpScrollFromBottom", tmpScrollFromBottom);
                 setScrollFromBottom(scrollHeight - scrollTop - clientHeight);
 
                 setLocalMessages((prevMessages) => {
@@ -73,6 +70,8 @@ function Home({ selectedConversation = null, messages = null }) {
 
         const offCreated = on("message.created", messageCreated);
 
+        setScrollFromBottom(0);
+        setNoMoreMessages(false);
         return () => {
             offCreated();
         };
