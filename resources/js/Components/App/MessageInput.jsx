@@ -31,6 +31,7 @@ const MessageInput = ({ conversation = null }) => {
                 url: URL.createObjectURL(file),
             };
         });
+        ev.target.value = null;
 
         setChosenFiles((prevFiles) => {
             return [...prevFiles, ...updatedFiles];
