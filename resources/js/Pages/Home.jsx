@@ -9,9 +9,6 @@ import { useEventBus } from "@/EventBus";
 import axios from "axios";
 import AttachmentPreviewModal from "@/Components/App/AttachmentPreviewModal";
 
-
-
-
 function Home({ selectedConversation = null, messages = null }) {
     const [localMessages, setLocalMessages] = useState([]);
     const [noMoreMessages, setNoMoreMessages] = useState(false);
@@ -163,6 +160,7 @@ function Home({ selectedConversation = null, messages = null }) {
                                     <MessageItem
                                         key={message.id}
                                         message={message}
+                                        attachmentClick={onAttachmentClick}
                                     />
                                 ))}
                             </div>
