@@ -92,7 +92,7 @@ class MessageController extends Controller
                     'name' => $file->getClientOriginalName(),
                     'mime' => $file->getClientMimeType(),
                     'size' => $file->getSize(),
-                    'path' => $file->store($directory), 'public',
+                    'path' => $file->store($directory, 'public'),
                 ];
                 $attachment = MessageAttachment::create($model);
                 $attachments[] = $attachment;
