@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('receiver_id')->nullable()->constrained('users');
             $table->foreignId('group_id')->nullable()->constrained('groups');
             $table->foreignId('conversation_id')->nullable()->constrained('conversations');
-
             $table->timestamps();
         });
 
