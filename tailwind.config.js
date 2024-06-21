@@ -3,6 +3,7 @@ import forms from "@tailwindcss/forms";
 
 /** @type {import('tailwindcss').Config} */
 export default {
+    darkMode: "class",
     content: [
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
         "./storage/framework/views/*.php",
@@ -26,11 +27,10 @@ export default {
         },
     },
 
-    darkMode: "class",
-
     plugins: [forms, require("daisyui")],
 
+    // daisyUI config (optional - here are the default values)
     daisyui: {
-        themes: ["business"], // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]
+        themes: ["dark"],
     },
 };
