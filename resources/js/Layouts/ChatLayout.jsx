@@ -1,10 +1,11 @@
+import ConversationItem from "@/Components/App/ConversationItem";
+import GroupModal from "@/Components/App/GroupModal";
 import TextInput from "@/Components/TextInput";
-import { usePage } from "@inertiajs/react";
-import { useEffect } from "react";
-import { useState } from "react";
-import ConversationItem from "../Components/App/ConversationItem";
-import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { useEventBus } from "@/EventBus";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { router, usePage } from "@inertiajs/react";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const ChatLayout = ({ children }) => {
     const page = usePage();
@@ -13,22 +14,24 @@ const ChatLayout = ({ children }) => {
     const [localConversations, setLocalConversations] = useState([]);
     const [sortedConversations, setSortedConversations] = useState([]);
     const [onlineUsers, setOnlineUsers] = useState({});
-    const { on } = useEventBus();
+    const [showGroupModal, setShowGroupModal] = useState(false);
+    const { emit, on } = useEventBus();
 
     const isUserOnline = (userId) => onlineUsers[userId];
 
     const onSearch = (ev) => {
         const search = ev.target.value.toLowerCase();
         setLocalConversations(
-            conversations.filter((conversation) =>
-                conversation.name.toLowerCase().includes(search)
-            )
+            conversations.filter((conversation) => {
+                return conversation.name.toLowerCase().includes(search);
+            })
         );
     };
 
     const messageCreated = (message) => {
         setLocalConversations((oldUsers) => {
             return oldUsers.map((u) => {
+                // If the message is for user
                 if (
                     message.receiver_id &&
                     !u.is_group &&
@@ -38,6 +41,7 @@ const ChatLayout = ({ children }) => {
                     u.last_message_date = message.created_at;
                     return u;
                 }
+                // If the message is for group
                 if (
                     message.group_id &&
                     u.is_group &&
@@ -52,10 +56,43 @@ const ChatLayout = ({ children }) => {
         });
     };
 
+    const messageDeleted = ({ prevMessage }) => {
+        if (!prevMessage) {
+            return;
+        }
+
+        // Find the conversation by prevMessage and updated its last_message_id and date
+        messageCreated(prevMessage);
+    };
+
     useEffect(() => {
         const offCreated = on("message.created", messageCreated);
+        const offDeleted = on("message.deleted", messageDeleted);
+        const offModalShow = on("GroupModal.show", (group) => {
+            setShowGroupModal(true);
+        });
+
+        const offGroupDelete = on("group.deleted", ({ id, name }) => {
+            setLocalConversations((oldConversations) => {
+                return oldConversations.filter((con) => con.id != id);
+            });
+
+            emit("toast.show", `Group "${name}" was deleted`);
+
+            console.log(selectedConversation);
+            if (
+                !selectedConversation ||
+                (selectedConversation.is_group && selectedConversation.id == id)
+            ) {
+                router.visit(route("dashboard"));
+            }
+        });
+
         return () => {
             offCreated();
+            offDeleted();
+            offModalShow();
+            offGroupDelete();
         };
     }, [on]);
 
@@ -63,7 +100,7 @@ const ChatLayout = ({ children }) => {
         setSortedConversations(
             localConversations.sort((a, b) => {
                 if (a.blocked_at && b.blocked_at) {
-                    return a.blocked > b.blocked ? 1 : -1;
+                    return a.blocked_at > b.blocked_at ? 1 : -1;
                 } else if (a.blocked_at) {
                     return 1;
                 } else if (b.blocked_at) {
@@ -99,7 +136,6 @@ const ChatLayout = ({ children }) => {
                     return { ...prevOnlineUsers, ...onlineUsersObj };
                 });
             })
-            // end online users
             .joining((user) => {
                 setOnlineUsers((prevOnlineUsers) => {
                     const updatedUsers = { ...prevOnlineUsers };
@@ -107,16 +143,13 @@ const ChatLayout = ({ children }) => {
                     return updatedUsers;
                 });
             })
-            // end joining
             .leaving((user) => {
                 setOnlineUsers((prevOnlineUsers) => {
                     const updatedUsers = { ...prevOnlineUsers };
                     delete updatedUsers[user.id];
                     return updatedUsers;
                 });
-                console.log("leaving", user);
             })
-            // end leaving
             .error((error) => {
                 console.error("error", error);
             });
@@ -134,19 +167,20 @@ const ChatLayout = ({ children }) => {
                         selectedConversation ? "-ml-[100%] sm:ml-0" : ""
                     }`}
                 >
-                    {/* title */}
                     <div className="flex items-center justify-between py-2 px-3 text-xl font-medium text-gray-200">
                         My Conversations
                         <div
                             className="tooltip tooltip-left"
                             data-tip="Create new Group"
                         >
-                            <button className="text-gray-400 hover:text-gray-200">
+                            <button
+                                onClick={(ev) => setShowGroupModal(true)}
+                                className="text-gray-400 hover:text-gray-200"
+                            >
                                 <PencilSquareIcon className="w-4 h-4 inline-block ml-2" />
                             </button>
                         </div>
                     </div>
-                    {/* search section */}
                     <div className="p-3">
                         <TextInput
                             onKeyUp={onSearch}
@@ -154,7 +188,6 @@ const ChatLayout = ({ children }) => {
                             className="w-full"
                         />
                     </div>
-                    {/* scrollable conversations */}
                     <div className="flex-1 overflow-auto">
                         {sortedConversations &&
                             sortedConversations.map((conversation) => (
@@ -175,6 +208,10 @@ const ChatLayout = ({ children }) => {
                     {children}
                 </div>
             </div>
+            <GroupModal
+                show={showGroupModal}
+                onClose={() => setShowGroupModal(false)}
+            />
         </>
     );
 };

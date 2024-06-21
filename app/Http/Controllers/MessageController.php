@@ -2,23 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\Group;
-use App\Models\Message;
+use App\Events\SocketMessage;
 use App\Http\Requests\StoreMessageRequest;
 use App\Http\Resources\MessageResource;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use App\Models\MessageAttachment;
 use App\Models\Conversation;
-use App\Events\SocketMessage;
-
-
+use App\Models\Group;
+use App\Models\Message;
+use App\Models\MessageAttachment;
+use App\Models\User;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class MessageController extends Controller
 {
-    // this loads messages by users
     public function byUser(User $user)
     {
         $messages = Message::where('sender_id', auth()->id())
@@ -34,7 +30,6 @@ class MessageController extends Controller
         ]);
     }
 
-    // this loads messages by groups
     public function byGroup(Group $group)
     {
         $messages = Message::where('group_id', $group->id)
@@ -47,9 +42,9 @@ class MessageController extends Controller
         ]);
     }
 
-    // this loads older messages - limited to provided method
     public function loadOlder(Message $message)
     {
+        // Load older messages that are older than the given message, sort them by the latest
         if ($message->group_id) {
             $messages = Message::where('created_at', '<', $message->created_at)
                 ->where('group_id', $message->group_id)
@@ -66,10 +61,14 @@ class MessageController extends Controller
                 ->latest()
                 ->paginate(10);
         }
+
+        // Return the messages as a resource
         return MessageResource::collection($messages);
     }
 
-    // this stores a new message
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(StoreMessageRequest $request)
     {
         $data = $request->validated();
@@ -99,24 +98,52 @@ class MessageController extends Controller
             }
             $message->attachments = $attachments;
         }
+
+
         if ($receiverId) {
             Conversation::updateConversationWithMessage($receiverId, auth()->id(), $message);
         }
+
         if ($groupId) {
             Group::updateGroupWithMessage($groupId, $message);
         }
 
         SocketMessage::dispatch($message);
+
         return new MessageResource($message);
     }
 
-    // this deletes a message
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy(Message $message)
     {
+        // Check if the user is the owner of the message
         if ($message->sender_id !== auth()->id()) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
+
+        $group = null;
+        $conversation = null;
+        // Check if the message is the group message
+        if ($message->group_id) {
+            $group = Group::where('last_message_id', $message->id)->first();
+        } else {
+            $conversation = Conversation::where('last_message_id', $message->id)->first();
+        }
+
         $message->delete();
-        return response('', 204);
+
+        $lastMessage = null;
+        if ($group) {
+            // Repopulate $group with latest database data
+            $group = Group::find($group->id);
+            $lastMessage = $group->lastMessage;
+        } else if ($conversation) {
+            $conversation = Conversation::find($conversation->id);
+            $lastMessage = $conversation->lastMessage;
+        }
+
+        return response()->json(['message' => $lastMessage ? new MessageResource($lastMessage) : null]);
     }
 }

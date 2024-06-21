@@ -4,6 +4,7 @@ import React from "react";
 import UserAvatar from "./UserAvatar";
 import { formatMessageDateLong } from "@/helpers";
 import MessageAttachments from "./MessageAttachments";
+import MessageOptionsDropdown from "./MessageOptionsDropdown";
 
 const MessageItem = ({ message, attachmentClick }) => {
     const currentUser = usePage().props.auth.user;
@@ -11,10 +12,10 @@ const MessageItem = ({ message, attachmentClick }) => {
     return (
         <div
             className={
-                "chat" +
+                "chat " +
                 (message.sender_id === currentUser.id
-                    ? " chat-end"
-                    : " chat-start")
+                    ? "chat-end"
+                    : "chat-start")
             }
         >
             {<UserAvatar user={message.sender} />}
@@ -23,19 +24,22 @@ const MessageItem = ({ message, attachmentClick }) => {
                 {message.sender_id !== currentUser.id
                     ? message.sender.name
                     : ""}
-
                 <time className="text-xs opacity-50 ml-2">
                     {formatMessageDateLong(message.created_at)}
                 </time>
             </div>
+
             <div
                 className={
-                    "chat-bubble relative" +
+                    "chat-bubble relative " +
                     (message.sender_id === currentUser.id
                         ? " chat-bubble-info"
-                        : " ")
+                        : "")
                 }
             >
+                {message.sender_id == currentUser.id && (
+                    <MessageOptionsDropdown message={message} />
+                )}
                 <div className="chat-message">
                     <div className="chat-message-content">
                         <ReactMarkdown>{message.message}</ReactMarkdown>
