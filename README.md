@@ -38,7 +38,7 @@ You can check the working demo right here: coming soon
 1. Execute migrations with seed data: `php artisan migrate --seed`
 1. Start the server: `php artisan serve`
 1. Open new terminal and execute `npm install` and `npm run dev` to start vite server for local development
-1. Open another terminal and execute `php artisan reverb` to start Laravel Reverb's local websocket server
+1. Open another terminal and execute `php artisan reverb:start` to start Laravel Reverb's local websocket server
 1. Open one more new terminal and execute `php artisan queue:work` which will start listening for background jobs.
    When we try to delete the group, `queue:work` command is what will listen to Group Delete job, delete the group and will emit socket message.
 
