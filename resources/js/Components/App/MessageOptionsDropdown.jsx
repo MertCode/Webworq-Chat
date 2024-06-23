@@ -39,7 +39,7 @@ export default function MessageOptionsDropdown({ message }) {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                 >
-                    <Menu.Items className="absolute left-0 mt-2 w-48 rounded-md bg-gray-800 shadow-lg z-[100]">
+                    <Menu.Items className="absolute left-0 mt-2  rounded-md bg-gray-800 shadow-lg z-[100]">
                         <div className="px-1 py-1 ">
                             <Menu.Item>
                                 {({ active }) => (
