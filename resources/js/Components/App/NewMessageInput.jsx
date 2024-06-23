@@ -1,7 +1,8 @@
-import react, { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 const NewMessageInput = ({ value, onChange, onSend }) => {
     const input = useRef();
+
     const onInputKeyDown = (ev) => {
         if (ev.key === "Enter" && !ev.shiftKey) {
             ev.preventDefault();
@@ -35,8 +36,7 @@ const NewMessageInput = ({ value, onChange, onSend }) => {
             placeholder="Type a message"
             onKeyDown={onInputKeyDown}
             onChange={(ev) => onChangeEvent(ev)}
-            className="input input-bordered w-full rounded-r-none resize-none
-            overflow-y-auto max-h-40"
+            className="input input-bordered w-full rounded-r-none resize-none overflow-y-auto max-h-40"
         ></textarea>
     );
 };

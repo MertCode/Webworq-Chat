@@ -9,7 +9,7 @@ export const formatMessageDateLong = (date) => {
         });
     } else if (isYesterday(inputDate)) {
         return (
-            "Yesterday" +
+            "Yesterday " +
             inputDate.toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -113,4 +113,3 @@ export const formatBytes = (bytes, decimals = 2) => {
 
     return parseFloat(size.toFixed(dm)) + " " + sizes[i];
 };
-

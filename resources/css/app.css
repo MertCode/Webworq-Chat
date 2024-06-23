@@ -6,20 +6,21 @@
     height: 100vh;
 }
 
+
+
 .EmojiPickerReact.epr-dark-theme {
     background-color: theme("colors.gray.800");
 }
-
 .EmojiPickerReact.epr-dark-theme .epr-emoji-category-label {
     background-color: theme("colors.gray.900");
 }
 
 .conversation-item .avatar.online:before,
-.conversation-item .avatar.offline::before {
-    top: 1%;
-    right: 1%;
+.conversation-item .avatar.offline:before {
     width: 8px;
     height: 8px;
+    top: 1%;
+    right: 1%;
     outline-width: 1px;
 }
 
@@ -62,8 +63,8 @@
 }
 
 .chat-message-content a {
-    color: #ccc;
     text-decoration: underline;
+    color: rgb(246, 246, 246);
 }
 
 .chat-message-content > :first-child {
@@ -77,7 +78,7 @@
 .chat-message-content > blockquote {
     border-left: 5px solid #ccc;
     margin-left: 0;
-    padding-left: 0;
+    margin-right: 0;
     overflow: hidden;
     padding-left: 1.5em;
     padding-right: 1.5em;

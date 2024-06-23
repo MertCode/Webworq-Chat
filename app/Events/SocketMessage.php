@@ -3,12 +3,15 @@
 namespace App\Events;
 
 use App\Http\Resources\MessageResource;
+use App\Models\Message;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Message;
 
 class SocketMessage implements ShouldBroadcastNow
 {
@@ -18,7 +21,6 @@ class SocketMessage implements ShouldBroadcastNow
      * Create a new event instance.
      */
     public function __construct(public Message $message)
-
     {
         //
     }
@@ -45,7 +47,6 @@ class SocketMessage implements ShouldBroadcastNow
         } else {
             $channels[] = new PrivateChannel('message.user.' . collect([$m->sender_id, $m->receiver_id])->sort()->implode('-'));
         }
-
 
         return $channels;
     }

@@ -3,7 +3,7 @@ import {
     ArrowDownTrayIcon,
     PlayCircleIcon,
 } from "@heroicons/react/24/solid";
-import { isAudio, isImage, isPDF, isPreviewable, isVideo } from "@/helpers";
+import { isAudio, isImage, isPDF, isPreviewable, isVideo } from "../../helpers";
 
 const MessageAttachments = ({ attachments, attachmentClick }) => {
     return (
@@ -15,7 +15,7 @@ const MessageAttachments = ({ attachments, attachmentClick }) => {
                             onClick={(ev) => attachmentClick(attachments, ind)}
                             key={attachment.id}
                             className={
-                                `group flex flex-col items-center justify-center text-gray-500 relative cursor-pointer` +
+                                `group flex flex-col items-center justify-center text-gray-500 relative cursor-pointer ` +
                                 (isAudio(attachment)
                                     ? "w-84"
                                     : "w-32 aspect-square bg-blue-100")
@@ -26,11 +26,12 @@ const MessageAttachments = ({ attachments, attachmentClick }) => {
                                     onClick={(ev) => ev.stopPropagation()}
                                     download
                                     href={attachment.url}
-                                    className="z-20 opacity-100 group-hover:opacity-100 transition-all w-8 h-8 flex items-center justify-center text-gray-100 bg-gray-700 rounded absolute right-top-0 cursor-pointer hover:bg-gray-800"
+                                    className="z-20 opacity-100 group-hover:opacity-100 transition-all w-8 h-8 flex items-center justify-center text-gray-100 bg-gray-700 rounded absolute right-0 top-0 cursor-pointer hover:bg-gray-800"
                                 >
                                     <ArrowDownTrayIcon className="w-4 h-4" />
                                 </a>
                             )}
+
                             {isImage(attachment) && (
                                 <img
                                     src={attachment.url}
@@ -55,7 +56,7 @@ const MessageAttachments = ({ attachments, attachmentClick }) => {
                             )}
                             {isPDF(attachment) && (
                                 <div className="relative flex justify-center items-center">
-                                    <div className="absolute left-0 top-0 right-0 bottom-0"></div>
+                                    <div className="absolute left-0 top-0 right-0 bottom-0 "></div>
                                     <iframe
                                         src={attachment.url}
                                         className="w-full h-full"
@@ -70,6 +71,7 @@ const MessageAttachments = ({ attachments, attachmentClick }) => {
                                     className="flex flex-col justify-center items-center"
                                 >
                                     <PaperClipIcon className="w-10 h-10 mb-3" />
+
                                     <small className="text-center">
                                         {attachment.name}
                                     </small>
@@ -82,4 +84,5 @@ const MessageAttachments = ({ attachments, attachmentClick }) => {
         </>
     );
 };
+
 export default MessageAttachments;

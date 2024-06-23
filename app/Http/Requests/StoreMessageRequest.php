@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-
 class StoreMessageRequest extends FormRequest
 {
     /**
@@ -26,8 +25,8 @@ class StoreMessageRequest extends FormRequest
             'message' => 'nullable|string',
             'group_id' => 'required_without:receiver_id|nullable|exists:groups,id',
             'receiver_id' => 'required_without:group_id|nullable|exists:users,id',
-            'attachment' => 'nullable|array|max:10',
-            'attachment.*' => 'file|max:512000',
+            'attachments' => 'nullable|array|max:10',
+            'attachments.*' => 'file|max:1024000',
         ];
     }
 }

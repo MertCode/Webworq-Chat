@@ -8,12 +8,12 @@ import {
     XCircleIcon,
 } from "@heroicons/react/24/solid";
 import NewMessageInput from "./NewMessageInput";
-import axios from "axios";
 import EmojiPicker from "emoji-picker-react";
-import { Popover, Transition } from "@headlessui/react";
+import { Popover } from "@headlessui/react";
 import { isAudio, isImage } from "@/helpers";
-import CustomAudioPlayer from "./CustomAudioPlayer";
 import AttachmentPreview from "./AttachmentPreview";
+import CustomAudioPlayer from "./CustomAudioPlayer";
+import AudioRecorder from "./AudioRecorder";
 
 const MessageInput = ({ conversation = null }) => {
     const [newMessage, setNewMessage] = useState("");
@@ -37,13 +37,14 @@ const MessageInput = ({ conversation = null }) => {
             return [...prevFiles, ...updatedFiles];
         });
     };
-
     const onSendClick = () => {
         if (messageSending) {
             return;
         }
         if (newMessage.trim() === "" && chosenFiles.length === 0) {
-            setInputErrorMessage("Message cannot be empty.");
+            setInputErrorMessage(
+                "Please provide a message or upload attachments."
+            );
 
             setTimeout(() => {
                 setInputErrorMessage("");
@@ -54,7 +55,6 @@ const MessageInput = ({ conversation = null }) => {
         chosenFiles.forEach((file) => {
             formData.append("attachments[]", file.file);
         });
-
         formData.append("message", newMessage);
         if (conversation.is_user) {
             formData.append("receiver_id", conversation.id);
@@ -70,7 +70,9 @@ const MessageInput = ({ conversation = null }) => {
                         (progressEvent.loaded / progressEvent.total) * 100
                     );
                     console.log(progress);
-                    setUploadProgress(progress);
+                    if (chosenFiles.length > 0) {
+                        setUploadProgress(progress);
+                    }
                 },
             })
             .then((response) => {
@@ -84,7 +86,7 @@ const MessageInput = ({ conversation = null }) => {
                 setChosenFiles([]);
                 const message = error?.response?.data?.message;
                 setInputErrorMessage(
-                    message || "An error occurred while sending message."
+                    message || "An error occurred while sending message"
                 );
             });
     };
@@ -105,10 +107,14 @@ const MessageInput = ({ conversation = null }) => {
         axios.post(route("message.store"), data);
     };
 
+    const recordedAudioReady = (file, url) => {
+        setChosenFiles((prevFiles) => [...prevFiles, { file, url }]);
+    };
+
     return (
         <div className="flex flex-wrap items-start border-t border-slate-700 py-3">
             <div className="order-2 flex-1 xs:flex-none xs:order-1 p-2">
-                <button className="p-1 text-gray-400 hover:text-gray-300 relative">
+                <button className="p-1 text-gray-400 hover:text-gray-300 relative overflow-hidden">
                     <PaperClipIcon className="w-6" />
                     <input
                         type="file"
@@ -117,7 +123,7 @@ const MessageInput = ({ conversation = null }) => {
                         className="absolute left-0 top-0 right-0 bottom-0 z-20 opacity-0 cursor-pointer"
                     />
                 </button>
-                <button className="p-1 text-gray-400 hover:text-gray-300 relative">
+                <button className="p-1 text-gray-400 hover:text-gray-300 relative overflow-hidden">
                     <PhotoIcon className="w-6" />
                     <input
                         type="file"
@@ -127,6 +133,7 @@ const MessageInput = ({ conversation = null }) => {
                         className="absolute left-0 top-0 right-0 bottom-0 z-20 opacity-0 cursor-pointer"
                     />
                 </button>
+                <AudioRecorder fileReady={recordedAudioReady} />
             </div>
             <div className="order-1 px-3 xs:p-0 min-w-[220px] basis-full xs:basis-0 xs:order-2 flex-1 relative">
                 <div className="flex ">
@@ -140,14 +147,10 @@ const MessageInput = ({ conversation = null }) => {
                         disabled={messageSending}
                         className="btn btn-info rounded-l-none"
                     >
-                        {messageSending && (
-                            <span className="loading loading-spinner loading-xs"></span>
-                        )}
                         <PaperAirplaneIcon className="w-6" />
                         <span className="hidden sm:inline">Send</span>
                     </button>
-                </div>
-                {""}
+                </div>{" "}
                 {!!uploadProgress && (
                     <progress
                         className="progress progress-info w-full"
@@ -155,7 +158,6 @@ const MessageInput = ({ conversation = null }) => {
                         max="100"
                     ></progress>
                 )}
-
                 {inputErrorMessage && (
                     <p className="text-xs text-red-400">{inputErrorMessage}</p>
                 )}
@@ -165,7 +167,7 @@ const MessageInput = ({ conversation = null }) => {
                             key={file.file.name}
                             className={
                                 `relative flex justify-between cursor-pointer ` +
-                                (!isImage(file.file) ? "w-[240px]" : "")
+                                (!isImage(file.file) ? " w-[240px]" : "")
                             }
                         >
                             {isImage(file.file) && (
@@ -180,10 +182,12 @@ const MessageInput = ({ conversation = null }) => {
                                     file={file}
                                     showVolume={false}
                                 />
+                                // <audio src={file.url} controls></audio>
                             )}
                             {!isAudio(file.file) && !isImage(file.file) && (
                                 <AttachmentPreview file={file} />
                             )}
+
                             <button
                                 onClick={() =>
                                     setChosenFiles(
@@ -201,7 +205,6 @@ const MessageInput = ({ conversation = null }) => {
                     ))}
                 </div>
             </div>
-
             <div className="order-3 xs:order-3 p-2 flex">
                 <Popover className="relative">
                     <Popover.Button className="p-1 text-gray-400 hover:text-gray-300">
@@ -213,7 +216,7 @@ const MessageInput = ({ conversation = null }) => {
                             onEmojiClick={(ev) =>
                                 setNewMessage(newMessage + ev.emoji)
                             }
-                        />
+                        ></EmojiPicker>
                     </Popover.Panel>
                 </Popover>
                 <button

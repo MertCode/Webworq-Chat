@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 class MessageAttachmentResource extends JsonResource
 {
     public static $wrap = false;
+
     /**
      * Transform the resource into an array.
      *
@@ -25,7 +26,6 @@ class MessageAttachmentResource extends JsonResource
             'url' => Storage::url($this->path),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-
         ];
     }
 }
