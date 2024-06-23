@@ -9,7 +9,11 @@ class Conversation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id1', 'user_id2', 'last_message_id'];
+    protected $fillable = [
+        'user_id1',
+        'user_id2',
+        'last_message_id',
+    ];
 
     public function lastMessage()
     {
@@ -39,12 +43,13 @@ class Conversation extends Model
 
     public static function updateConversationWithMessage($userId1, $userId2, $message)
     {
+        // Find conversation, by user_id1 and user_id2 and update last message id
         $conversation = Conversation::where(function ($query) use ($userId1, $userId2) {
             $query->where('user_id1', $userId1)
-                ->Where('user_id2', $userId2);
+                ->where('user_id2', $userId2);
         })->orWhere(function ($query) use ($userId1, $userId2) {
             $query->where('user_id1', $userId2)
-                ->Where('user_id2', $userId1);
+                ->where('user_id2', $userId1);
         })->first();
 
         if ($conversation) {
