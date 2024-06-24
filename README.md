@@ -33,7 +33,7 @@ You can check the working demo right here: coming soon
 1. Start the server: `php artisan serve`
 1. Open new terminal and execute `npm install` and `npm run dev` to start vite server
 1. Open another terminal and execute `php artisan reverb:start` to start Laravel Reverb's local websocket server
-1. Open one more new terminal and execute `php artisan queue:work` to start listening for background jobs. This command handles tasks like deleting groups and all the messages in the backgorund.
+1. Open one more new terminal and execute `php artisan queue:work` to start listening for background jobs. This command handles tasks like deleting groups and all the messages in the background.
 
 
 ## 2024 Eindwerk - Full Stack Development -- Mert Sozen
