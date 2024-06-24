@@ -25,19 +25,15 @@ You can check the working demo right here: coming soon
 
 
 ## Installation
-1. Download or clone the project using git
-1. Navigate into the project's root directory using terminal
-1. Copy `.env.example` and create `.env` file
-1. Adjust `DB_*` parameters in `.env`
-1. Adjust `REVERB_*` parameters in `.env`
+1. Download or clone the project using Git
+1. Navigate into the project's root directory using terminal and execute `code .`
+1. Create a new `.env` file, copy all configurations from `.env.example`, and paste them into the new `.env` file. (The `.env.example` configurations are correct temporarily since the database is hosted.)
 1. Execute `composer install`
 1. Set application encryption key: `php artisan key:generate --ansi`
-1. Execute migrations with seed data: `php artisan migrate --seed`
 1. Start the server: `php artisan serve`
-1. Open new terminal and execute `npm install` and `npm run dev` to start vite server for local development
+1. Open new terminal and execute `npm install` and `npm run dev` to start vite server
 1. Open another terminal and execute `php artisan reverb:start` to start Laravel Reverb's local websocket server
-1. Open one more new terminal and execute `php artisan queue:work` which will start listening for background jobs.
-   When we try to delete the group, `queue:work` command is what will listen to Group Delete job, delete the group and will emit socket message.
+1. Open one more new terminal and execute `php artisan queue:work` to start listening for background jobs. This command handles tasks like deleting groups and all the messages in the backgorund.
 
 
-## 2024 Eindwerk - Full Stack Development
+## 2024 Eindwerk - Full Stack Development -- Mert Sozen
