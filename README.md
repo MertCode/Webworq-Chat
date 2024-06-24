@@ -1,8 +1,5 @@
 # Realtime Messaging app with Laravel 11, React, Tailwind
 
-This project is a starter template of realtime messaging application with Laravel 11 and React. 
-The project uses Laravel Reverb as a choice of websocket server.
-
 ## Project Features
 
 - Sending and receiving messages in realtime
